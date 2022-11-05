@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, StyleSheet, Button, Image } from "react-native";
+import { StyleSheet, Button, Image } from "react-native";
+import { Text } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from '../hooks/store';
 import { increment, incrementByAmount } from "../store/counter";
@@ -28,14 +29,20 @@ const HomeScreen = () => {
         <Text>Loading...</Text>
       ) : data ? (
         <>
-          <Text>{data.species.name}</Text>
-          <Image style={{ height: 300 }} source={{ uri: data.sprites.front_shiny}} />
+          <Text h3>
+            {data.species.name}
+          </Text>
+          <Image style={styles.image} source={{ uri: data.sprites.front_shiny}} />
         </>
       ) : null}
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  image: {
+    height: 300
+  }
+});
 
 export default HomeScreen;
