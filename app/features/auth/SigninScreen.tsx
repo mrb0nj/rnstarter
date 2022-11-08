@@ -31,9 +31,12 @@ const SigninScreen = ({ navigation }: SigninScreenProps) => {
       <Text h2 style={styles.heading}>Signin!</Text>
       <Input
         label="Email"
-        autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoComplete="off"
+        keyboardType="email-address"
       />
       <Input
         secureTextEntry

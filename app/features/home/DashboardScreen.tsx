@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Button } from 'react-native';
 import { useAtom } from 'jotai';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { usePocketbase, tokenAtom, userAtom } from './hooks/pocketbase';
+import { usePocketbase, tokenAtom, userAtom } from '../../hooks/pocketbase';
 
-const HomeScreen = () => {
+import { Button } from '@rneui/themed';
+
+const Dashboard = () => {
   const client = usePocketbase();
   const [, setToken] = useAtom(tokenAtom);
   const [, setUser] = useAtom(userAtom);
@@ -22,10 +23,4 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  image: {
-    height: 300
-  }
-});
-
-export default HomeScreen;
+export default Dashboard;

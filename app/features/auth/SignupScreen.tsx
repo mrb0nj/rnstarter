@@ -8,6 +8,7 @@ import type { SignupScreenProps } from '../../types';
 import { APP_NAME } from '@env'
 import { usePocketbase, tokenAtom, userAtom } from "../../hooks/pocketbase";
 
+
 const SignupScreen = ({ navigation }: SignupScreenProps) => {
   const [, setTokenAtom] = useAtom(tokenAtom);
   const [, setUserAtom] = useAtom(userAtom);
@@ -63,6 +64,7 @@ const SignupScreen = ({ navigation }: SignupScreenProps) => {
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="off"
+        keyboardType="email-address"
       />
       <Input
         secureTextEntry
