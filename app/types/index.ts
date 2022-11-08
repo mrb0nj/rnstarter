@@ -1,3 +1,4 @@
+export * from './auth';
 import type { NativeStackScreenProps } from "@react-navigation/native-stack"
 
 export type RootStackParamList = {
@@ -5,7 +6,6 @@ export type RootStackParamList = {
     Signin: undefined,
     Signup: undefined,
 }
-
 
 export type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 export type SignupScreenProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;

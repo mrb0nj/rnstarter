@@ -7,42 +7,53 @@ import Spacer from '../../components/Spacer'
 import type { SignupScreenProps } from '../../types';
 import { APP_NAME } from '@env'
 import { usePocketbase, tokenAtom, userAtom } from "../../hooks/pocketbase";
+import { AuthErrorPayload, AuthErrors } from "../../types";
 
+const defaultErrors: AuthErrors = {
+  username: null,
+  email: null,
+  password: null,
+  passwordConfirm: null,
+}
 
 const SignupScreen = ({ navigation }: SignupScreenProps) => {
   const [, setTokenAtom] = useAtom(tokenAtom);
   const [, setUserAtom] = useAtom(userAtom);
 
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<AuthErrors|null>(null);
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
+
   const client = usePocketbase();
   const signupUser = async () => {
     try {
       setLoading(true);
-        const user = await client.users.create({
-          email,
-          password,
-          passwordConfirm
-        });
+      const user = await client.users.create({
+        email,
+        password,
+        passwordConfirm
+      });
 
-        const { token } = await client.users.authViaEmail(email, password);
-        await client.records.update('profiles', `${user?.profile?.id}`, {
-            username
-        })
+      const { token } = await client.users.authViaEmail(email, password);
+      await client.records.update('profiles', `${user?.profile?.id}`, {
+          username
+      })
 
-        await client.users.requestVerification(user.email);
+      await client.users.requestVerification(user.email);
 
-        setTokenAtom(token);
-        setUserAtom(user);
-    } catch(err) {
-        console.log('authSignup.catch', err.data.data);
-        const errorKeys = Object.keys(err.data.data);
-        const errors = errorKeys.map(k => `- ${k}: ${err.data.data[k].message}`).join('\n');
+      setTokenAtom(token);
+      setUserAtom(user);
+    } catch(err: any) {
+      const { data }: AuthErrorPayload = err.data;
+      if (data) {
+        const error: AuthErrors = { ...defaultErrors, ...data };
+        setErrors(error);
+      }
     }
 
     setLoading(false);
@@ -56,6 +67,7 @@ const SignupScreen = ({ navigation }: SignupScreenProps) => {
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
+        errorMessage={errors?.username?.message}
       />
       <Input
         label="Email"
@@ -65,18 +77,21 @@ const SignupScreen = ({ navigation }: SignupScreenProps) => {
         autoCorrect={false}
         autoComplete="off"
         keyboardType="email-address"
+        errorMessage={errors?.email?.message}
       />
       <Input
         secureTextEntry
         label="Password"
         value={password}
         onChangeText={setPassword}
+        errorMessage={errors?.password?.message}
       />
       <Input
         secureTextEntry
         label="Password again"
         value={passwordConfirm}
         onChangeText={setPasswordConfirm}
+        errorMessage={errors?.passwordConfirm?.message}
       />
       <Spacer>
         <Button
